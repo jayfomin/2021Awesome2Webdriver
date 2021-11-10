@@ -6,28 +6,57 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;
 
 public class GoogleSearch {
 
     WebDriver driver;
 
+    //ToDo: Run this test in debugger
+
+    @BeforeSuite
+    public void beforeSuite(){
+        System.setProperty("webdriver.gecko.driver", "src/test/resources/drivers/geckodriver");
+        driver = new FirefoxDriver();
+    }
+
+    @AfterMethod
+    public void afterMethod(){
+        driver.manage().deleteAllCookies();
+        //this will give you confidence that the data the browser stores will not affect my future tests.
+
+    }
+
+    @AfterSuite
+    public void afterSuite(){
+        driver.close();
+    }
+
     @Test
     public void test001() {
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/drivers/geckodriver");
-
-        driver = new FirefoxDriver();
-
+        String textValue = "portnov computer school"
 
         openMainPage();
-        typeQuery();
+        typeQuery(textValue);
         submitSearch();
         waitForResults();
         assertResultPage();
 
     }
 
+    @Test
+    public void test002() {
+        String textValue = "#@#@#@!!#@#@!";
 
+        openMainPage();
+        typeQuery(textValue);
+        submitSearch();
+        waitForResults();
+        assertResultPage();
+    }
 
     private void waitForResults(){
         By resultsStatsElement = By.id("result-stats");
